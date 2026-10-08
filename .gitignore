@@ -1,0 +1,25 @@
+# Entorno virtual y gestor UV
+.venv/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+
+# Archivos multimedia y libros temporales
+*.wav
+*.mp3
+*.m4b
+*.epub
+
+# Carpetas para pesos de modelos ML (pesados)
+models/
+.cache/
+downloads/
+
+# IDEs y SO
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Variables de entorno secretas
+.env
