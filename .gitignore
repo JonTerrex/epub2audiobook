@@ -23,3 +23,8 @@ Thumbs.db
 
 # Variables de entorno secretas
 .env
+
+# Excluir muestras de prueba y archivos pesados
+samples/*.epub
+*.epub
+test_*.py

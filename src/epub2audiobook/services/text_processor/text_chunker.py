@@ -19,7 +19,6 @@ class TextChunker:
         self.max_chars = max_chars
         self.min_chars = min_chars
 
-        # Cargar modelo de lenguaje de spaCy para segmentación sintáctica
         try:
             self.nlp = spacy.load(model_name)
         except OSError:
@@ -28,10 +27,18 @@ class TextChunker:
                 f"Ejecuta: uv run python -m spacy download {model_name}"
             )
 
-        # Desactivar componentes pesados que no necesitamos (NER, Parser dependencias)
-        # para acelerar el procesamiento solo dejando la segmentación de oraciones (senter)
-        self.nlp.select_pipes(enable=["senter"] if "senter" in self.nlp.pipe_names else [])
+        # Agregar el segmentador ultrarrápido basado en reglas
+        if "sentencizer" not in self.nlp.pipe_names:
+            self.nlp.add_pipe("sentencizer")
 
+        # Desactivar componentes pesados que no requerimos para segmentación
+        pipes_to_disable = [
+            pipe for pipe in ["tok2vec", "morphologizer", "parser", "attribute_ruler", "lemmatizer", "ner"]
+            if pipe in self.nlp.pipe_names
+        ]
+        if pipes_to_disable:
+            self.nlp.disable_pipes(*pipes_to_disable)
+            
     def create_chunks(
         self, text: str, book_id: str, chapter_index: int
     ) -> List[TextChunk]:
